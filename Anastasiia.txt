@@ -1,0 +1,70 @@
+Java
+/////////////////////////////////
+import java.io.*;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+        String fileName = "article.txt";
+        StringBuilder builder = new StringBuilder();
+
+        // Read file by lines and create new content with the counters
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
+        String line;
+        while((line = reader.readLine()) != null) {
+            builder.append(line).append("\t").append(line.split("\\s+").length).append("\n");
+        }
+        reader.close();
+
+        // Write new content into file
+        PrintWriter writer = new PrintWriter(fileName);
+        writer.print(builder.toString());
+        writer.close();
+    }
+}
+
+Perl
+/////////////////////////////////
+#!/usr/bin/env perl    
+use strict;
+use warnings;
+
+open (my $file, "<", "article.txt");
+
+my %seen;
+while (<$file>) {
+    $seen{$_}++ for split /\W+/; 
+}
+
+my $count = 0;
+for (sort {
+        $seen{$b} <=> $seen{$a}
+                  ||
+           lc($a) cmp lc($b)   
+                  ||
+              $a  cmp  $b
+     } keys %seen)
+{
+    next unless /\w/;
+    printf "Word '%-0s' been used %0d times \n", $_, $seen{$_};
+    last if ++$count > 5;
+}
+
+
+Python
+/////////////////////////////////
+	upper_bond = int(input("Please, enter the upper number: "))
+	lower_bond = int(input("Please, enter the lower number: "))
+
+
+	file = open("article.txt", "r", encoding="utf-8-sig")
+
+			
+	from collections import Counter
+	wordcount = Counter(file.read().replace(",", "").split())
+
+	for count in wordcount.values():
+		if count <= upper_bond and count >= lower_bond:
+			for item in wordcount.items(): print("{}\t{}".format(*item))
+		else:
+			print ("No words are matching your search")
